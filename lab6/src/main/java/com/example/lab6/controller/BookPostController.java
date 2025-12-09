@@ -47,7 +47,6 @@ public class BookPostController {
 
     @GetMapping("/edit/{id}")
     public String editForm(@PathVariable Integer id, Model model, HttpSession session) {
-        // Simple authorization check
         Student user = (Student) session.getAttribute("user");
         BookPost post = bookPostService.findById(id).orElseThrow();
         if (user == null || !post.getOwner().getId().equals(user.getId())) {

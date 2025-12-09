@@ -23,7 +23,7 @@ public class OrderController {
             return "redirect:/students/login";
         }
         orderService.checkout(user);
-        return "redirect:/orders/buying"; // Redirect to buying history to see created orders
+        return "redirect:/orders/buying";
     }
 
     @GetMapping("/buying")
@@ -51,10 +51,9 @@ public class OrderController {
         Student user = (Student) session.getAttribute("user");
          if (user == null) return "redirect:/students/login";
          
-        // Authorization check: only buyer can pay
         Order order = orderService.getOrderById(id);
         if (!order.getBuyer().getId().equals(user.getId())) {
-             return "redirect:/orders/buying"; // or error page
+             return "redirect:/orders/buying";
         }
 
         orderService.payOrder(id);
@@ -66,7 +65,6 @@ public class OrderController {
         Student user = (Student) session.getAttribute("user");
         if (user == null) return "redirect:/students/login";
 
-        // Authorization check: only seller can ship
         Order order = orderService.getOrderById(id);
         if (!order.getSeller().getId().equals(user.getId())) {
              return "redirect:/orders/selling";
@@ -81,7 +79,6 @@ public class OrderController {
         Student user = (Student) session.getAttribute("user");
         if (user == null) return "redirect:/students/login";
 
-        // Authorization check: only buyer can confirm receipt
         Order order = orderService.getOrderById(id);
         if (!order.getBuyer().getId().equals(user.getId())) {
              return "redirect:/orders/buying";

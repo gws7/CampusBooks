@@ -38,10 +38,8 @@
                     </div>
                     <div class="card-footer bg-white border-top-0">
                         <div class="d-grid gap-2">
-                            <!-- Login to Buy -->
                             <a th:href="@{/students/login}" class="btn btn-primary" th:if="${session.user == null}">Login to Buy</a>
 
-                            <!-- Add to Cart Form (Only if logged in and not owner) -->
                             <form th:action="@{/cart/add}" method="post" th:if="${session.user != null and session.user.id != post.owner.id}">
                                 <input type="hidden" name="bookPostId" th:value="${post.id}">
                                 <div class="input-group mb-2">
@@ -50,7 +48,6 @@
                                 </div>
                             </form>
                             
-                            <!-- Seller Actions (Only if logged in and owner) -->
                             <div th:if="${session.user != null and session.user.id == post.owner.id}" class="d-flex gap-2">
                                 <a th:href="@{/book-posts/edit/{id}(id=${post.id})}" class="btn btn-secondary flex-grow-1">Edit</a>
                                 <a th:href="@{/book-posts/delete/{id}(id=${post.id})}" class="btn btn-danger flex-grow-1" onclick="return confirm('Delete this post?')">Delete</a>

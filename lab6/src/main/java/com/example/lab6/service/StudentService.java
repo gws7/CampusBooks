@@ -15,7 +15,6 @@ public class StudentService {
     private StudentRepository studentRepository;
 
     public Student register(Student student) {
-        // In a real app, hash the password here
         return studentRepository.save(student);
     }
 

@@ -49,7 +49,6 @@ public class CartService {
              throw new RuntimeException("Not enough quantity available");
         }
 
-        // Check if item already exists in cart
         List<CartItem> items = cartItemRepository.findByCartId(cart.getId());
         Optional<CartItem> existingItem = items.stream()
                 .filter(item -> item.getBookPost().getId().equals(bookPostId))

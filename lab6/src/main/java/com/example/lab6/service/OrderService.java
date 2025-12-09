@@ -35,7 +35,6 @@ public class OrderService {
             throw new RuntimeException("Cart is empty");
         }
 
-        // Group items by seller to create separate orders if items are from different sellers
         Map<Student, List<CartItem>> itemsBySeller = cartItems.stream()
                 .collect(Collectors.groupingBy(item -> item.getBookPost().getOwner()));
 
@@ -46,10 +45,6 @@ public class OrderService {
             Order order = new Order();
             order.setBuyer(buyer);
             order.setSeller(seller);
-            // Initial status is CREATED (or PAID immediately if we simulate payment now)
-            // Based on requirements: "3. Clicks Checkout... Order.status = CREATED... 4. Student pays... Order.status = PAID"
-            // We can assume 'checkout' creates the order, and then a separate 'pay' step, OR just combine them for simplicity if desired.
-            // Let's stick to the flow: Checkout -> CREATED.
             order.setStatus("CREATED");
             
             order = orderRepository.save(order);
@@ -58,12 +53,10 @@ public class OrderService {
             for (CartItem cartItem : sellerItems) {
                 BookPost bookPost = cartItem.getBookPost();
                 
-                // Check stock again
                 if (bookPost.getQuantityAvailable() < cartItem.getQuantity()) {
                      throw new RuntimeException("Not enough stock for book: " + bookPost.getTitle());
                 }
                 
-                // Decrement stock
                 bookPost.setQuantityAvailable(bookPost.getQuantityAvailable() - cartItem.getQuantity());
                 if (bookPost.getQuantityAvailable() == 0) {
                     bookPost.setStatus("SOLD");
@@ -84,7 +77,6 @@ public class OrderService {
             orderRepository.save(order);
         }
 
-        // Clear cart after orders are created
         cartService.clearCart(cart);
     }
 
@@ -94,7 +86,6 @@ public class OrderService {
         if (!"CREATED".equals(order.getStatus())) {
             throw new RuntimeException("Order cannot be paid in current status: " + order.getStatus());
         }
-        // In real app: validate payment info here
         order.setStatus("PAID");
         orderRepository.save(order);
     }

@@ -28,7 +28,6 @@ public class BookPost {
 
     private Integer quantityAvailable;
     
-    // Statuses: ACTIVE, SOLD, BLOCKED, DELETED
     private String status;
 
     @ManyToOne

@@ -12,7 +12,6 @@ public class DataInitializer {
     @Bean
     public CommandLineRunner initData(AdminRepository adminRepository) {
         return args -> {
-            // Check if admin already exists
             if (adminRepository.findByEmail("admin@campusbooks.com") == null) {
                 Admin admin = new Admin();
                 admin.setEmail("admin@campusbooks.com");
