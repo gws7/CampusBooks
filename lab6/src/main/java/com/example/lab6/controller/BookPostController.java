@@ -38,7 +38,7 @@ public class BookPostController {
             return "redirect:/students/login";
         }
         bookPost.setOwner(user);
-        if (bookPost.getStatus() == null) {
+        if (bookPost.getStatus() == null || bookPost.getStatus().isEmpty()) {
             bookPost.setStatus("ACTIVE");
         }
         bookPostService.save(bookPost);
