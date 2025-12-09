@@ -38,6 +38,9 @@ public class BookPostController {
             return "redirect:/students/login";
         }
         bookPost.setOwner(user);
+        if (bookPost.getStatus() == null) {
+            bookPost.setStatus("ACTIVE");
+        }
         bookPostService.save(bookPost);
         return "redirect:/book-posts";
     }

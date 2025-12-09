@@ -27,7 +27,8 @@ public class BookPost {
     private String description;
 
     private Integer quantityAvailable;
-
+    
+    // Statuses: ACTIVE, SOLD, BLOCKED, DELETED
     private String status;
 
     @ManyToOne
@@ -106,4 +107,3 @@ public class BookPost {
         this.owner = owner;
     }
 }
-

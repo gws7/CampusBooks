@@ -1,5 +1,6 @@
 package com.example.lab6.controller;
 
+import com.example.lab6.model.Order;
 import com.example.lab6.model.Student;
 import com.example.lab6.service.OrderService;
 import jakarta.servlet.http.HttpSession;
@@ -21,18 +22,72 @@ public class OrderController {
         if (user == null) {
             return "redirect:/students/login";
         }
-        orderService.createOrder(user);
-        return "redirect:/orders/history";
+        orderService.checkout(user);
+        return "redirect:/orders/buying"; // Redirect to buying history to see created orders
     }
 
-    @GetMapping("/history")
-    public String orderHistory(HttpSession session, Model model) {
+    @GetMapping("/buying")
+    public String buyingHistory(HttpSession session, Model model) {
         Student user = (Student) session.getAttribute("user");
         if (user == null) {
             return "redirect:/students/login";
         }
         model.addAttribute("orders", orderService.getOrdersByBuyer(user.getId()));
-        return "orders/history";
+        return "orders/buying";
+    }
+
+    @GetMapping("/selling")
+    public String sellingHistory(HttpSession session, Model model) {
+        Student user = (Student) session.getAttribute("user");
+        if (user == null) {
+            return "redirect:/students/login";
+        }
+        model.addAttribute("orders", orderService.getOrdersBySeller(user.getId()));
+        return "orders/selling";
+    }
+
+    @PostMapping("/pay/{id}")
+    public String payOrder(@PathVariable Integer id, HttpSession session) {
+        Student user = (Student) session.getAttribute("user");
+         if (user == null) return "redirect:/students/login";
+         
+        // Authorization check: only buyer can pay
+        Order order = orderService.getOrderById(id);
+        if (!order.getBuyer().getId().equals(user.getId())) {
+             return "redirect:/orders/buying"; // or error page
+        }
+
+        orderService.payOrder(id);
+        return "redirect:/orders/buying";
+    }
+
+    @PostMapping("/ship/{id}")
+    public String shipOrder(@PathVariable Integer id, HttpSession session) {
+        Student user = (Student) session.getAttribute("user");
+        if (user == null) return "redirect:/students/login";
+
+        // Authorization check: only seller can ship
+        Order order = orderService.getOrderById(id);
+        if (!order.getSeller().getId().equals(user.getId())) {
+             return "redirect:/orders/selling";
+        }
+
+        orderService.shipOrder(id);
+        return "redirect:/orders/selling";
+    }
+
+    @PostMapping("/receive/{id}")
+    public String receiveOrder(@PathVariable Integer id, HttpSession session) {
+        Student user = (Student) session.getAttribute("user");
+        if (user == null) return "redirect:/students/login";
+
+        // Authorization check: only buyer can confirm receipt
+        Order order = orderService.getOrderById(id);
+        if (!order.getBuyer().getId().equals(user.getId())) {
+             return "redirect:/orders/buying";
+        }
+
+        orderService.receiveOrder(id);
+        return "redirect:/orders/buying";
     }
 }
-

@@ -16,6 +16,7 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    // Statuses: CREATED, PAID, SHIPPED, COMPLETED, CANCELLED
     private String status;
 
     private Double totalAmount;
@@ -68,4 +69,3 @@ public class Order {
         this.seller = seller;
     }
 }
-
